@@ -99,6 +99,12 @@ export default function Display({ admin = false }) {
   return (
     <div className="display">
       <header className="disp-header">
+        {!isAdmin && (
+          <div className="disp-brand">
+            <img src="/logo-agco.png" alt="AGCO" className="disp-logo" onError={(e) => { e.target.style.display = 'none' }} />
+            <img src="/logo-phtre.png" alt="PHTRE" className="disp-logo disp-logo-phtre" onError={(e) => { e.target.style.display = 'none' }} />
+          </div>
+        )}
         <div className="disp-title">
           <span className="live-dot" />
           <span className="eyebrow">Classifica in tempo reale</span>
@@ -125,9 +131,13 @@ export default function Display({ admin = false }) {
           {rows.map((r, i) => {
             const isNew = seen.current && !seen.current.has(r.id)
             if (seen.current) seen.current.add(r.id)
+            const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : null
             return (
               <li key={r.id || i} className={`disp-row ${i < 3 ? 'podium p' + (i + 1) : ''} ${isNew ? 'is-new' : ''}`}>
-                <span className="dr-rank">{i + 1}</span>
+                <span className="dr-rank">
+                  {medal ? <span className="dr-medal" aria-hidden="true">{medal}</span> : null}
+                  <span className="dr-num">{i + 1}</span>
+                </span>
                 <span className="dr-name">{r.nome} {r.cognome}</span>
                 <span className="dr-score">{r.punteggio}</span>
                 <span className="dr-time">{Math.round(r.tempoTotaleSecondi)}s</span>

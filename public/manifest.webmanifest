@@ -1,0 +1,16 @@
+{
+  "name": "Quiz Rifiuti AGCO",
+  "short_name": "Quiz AGCO",
+  "description": "Quiz sulla gestione rifiuti in produzione — AGCO SPA, a cura di PHTRE.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#16202e",
+  "theme_color": "#16202e",
+  "lang": "it",
+  "icons": [
+    { "src": "/favicon.svg", "type": "image/svg+xml", "sizes": "any", "purpose": "any" },
+    { "src": "/apple-touch-icon.png", "type": "image/png", "sizes": "180x180", "purpose": "any" },
+    { "src": "/icon-512.png", "type": "image/png", "sizes": "512x512", "purpose": "maskable" }
+  ]
+}

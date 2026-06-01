@@ -17,6 +17,11 @@ export default function Welcome({ lang, onStart }) {
       </div>
       <h1>{tr.welcomeTitle}</h1>
       <p className="sub">{tr.welcomeSub}</p>
+      <ul className="value-chips" aria-hidden="true">
+        <li>{tr.chipQuestions}</li>
+        <li>{tr.chipMinutes}</li>
+        <li>{tr.chipPrize}</li>
+      </ul>
       <button className="btn btn-primary btn-lg" onClick={onStart}>
         {tr.start}
       </button>

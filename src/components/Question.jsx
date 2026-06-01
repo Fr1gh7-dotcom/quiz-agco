@@ -55,14 +55,15 @@ export default function Question({ lang, q, index, total, onAnswer, onNext }) {
       <div className="options">
         {data.opzioni.map((opt, i) => {
           let cls = 'option'
+          let mark = null
           if (answered) {
-            if (i === q.rispostaCorretta) cls += ' correct'
-            else if (i === selected) cls += ' wrong'
+            if (i === q.rispostaCorretta) { cls += ' correct'; mark = '✓' }
+            else if (i === selected) { cls += ' wrong'; mark = '✕' }
             else cls += ' dim'
           }
           return (
-            <button key={i} className={cls} onClick={() => choose(i)} disabled={answered}>
-              <span className="opt-letter">{LETTERS[i]}</span>
+            <button key={i} className={cls} style={{ '--i': i }} onClick={() => choose(i)} disabled={answered}>
+              <span className="opt-letter">{mark ? <span className="opt-mark">{mark}</span> : LETTERS[i]}</span>
               <span className="opt-text">{opt}</span>
             </button>
           )
@@ -70,8 +71,9 @@ export default function Question({ lang, q, index, total, onAnswer, onNext }) {
       </div>
 
       {answered && (
-        <div className="q-feedback" ref={feedbackRef}>
+        <div className="q-feedback" ref={feedbackRef} role="status" aria-live="polite">
           <div className={`fb-label ${selected === q.rispostaCorretta ? 'fb-ok' : 'fb-no'}`}>
+            <span className="fb-icon" aria-hidden="true">{selected === q.rispostaCorretta ? '✓' : '✕'}</span>
             <span className="fb-tag">{selected === q.rispostaCorretta ? tr.correct : tr.wrong}</span>
           </div>
           <p className="q-ref">

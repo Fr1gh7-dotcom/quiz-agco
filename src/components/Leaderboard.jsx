@@ -24,9 +24,10 @@ export default function Leaderboard({ lang, rows, me, onPlayAgain, locked }) {
               r.cognome === me.cognome &&
               r.punteggio === me.punteggio &&
               r.tempoTotaleSecondi === me.tempoTotaleSecondi
+            const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : null
             return (
-              <li key={i} className={`board-row ${isMe ? 'me' : ''} ${i < 3 ? 'podium' : ''}`}>
-                <span className="b-rank">{i + 1}</span>
+              <li key={i} className={`board-row ${isMe ? 'me' : ''} ${i < 3 ? 'podium p' + (i + 1) : ''}`}>
+                <span className="b-rank">{medal ? <span className="b-medal" aria-hidden="true">{medal}</span> : i + 1}</span>
                 <span className="b-name">
                   {r.nome} {r.cognome} {isMe && <em>({tr.you})</em>}
                 </span>

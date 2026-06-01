@@ -34,6 +34,9 @@ Deploy: Vercel (statico, CDN). DB/Auth: Supabase (free tier).
 - ✅ Domande caricate dal **DB** (`questions`) con fallback al JSON statico
 - ✅ **Keep-alive** GitHub Actions ogni 4 giorni (anti-pausa free tier Supabase) — ATTIVO
 - ✅ QR generati in `qr/` (poster A4, volantino A5, web), puntano all'URL prod
+- ✅ **Splash brand intro (2026-06-02)**: all'avvio (~3s) overlay grafite "Questo progetto è stato realizzato da PHTRE" + logo, poi fade-out che rivela il gioco. Bilingue, reduced-motion-safe. Solo rotta quiz (`/`), non TV/admin. File: `src/components/Splash.jsx`.
+- ✅ **Polish premium grafico (2026-06-02)**: design system a livelli (shadow/gradiente/ring), `prefers-reduced-motion` globale, focus-visible coerente. Quiz tattile (stagger opzioni, icone ✓/✕ nei chip, feedback `aria-live`, timer a pillola con pulse oltre 30s, barra progresso gradiente). Risultato con count-up punteggio + medaglia top-3. Podio TV `/classifica` scenico (medaglie oro/argento/bronzo, riga #1 grande con glow oro, loghi brand). Welcome con chip valore (10 domande · ~3 min · premi). Board mobile con medaglie podio.
+- ✅ **Asset/meta (2026-06-02)**: `favicon.svg` + `favicon-32.png` + `apple-touch-icon.png` + `icon-512.png` + `og-image.png` (1200×630) + `manifest.webmanifest`. `index.html` con Open Graph/Twitter card/apple-touch/manifest. Risolto il 404 della favicon mancante. Generatore: `scripts/genassets.mjs` (Playwright). Screenshot QA in `screenshots/new/`.
 
 ## DA FARE (pending)
 - ⏳ **Creare l'utente admin** in Supabase → Authentication → Users → Add user (email+password, ✅ Auto Confirm). Senza, il login `/admin` dà errore credenziali.

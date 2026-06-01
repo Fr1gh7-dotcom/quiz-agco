@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import fallbackQuestions from './data/questions.json'
 import Header from './components/Header.jsx'
+import Splash from './components/Splash.jsx'
 import Welcome from './components/Welcome.jsx'
 import NameInput from './components/NameInput.jsx'
 import Instructions from './components/Instructions.jsx'
@@ -14,6 +15,7 @@ const SCREENS = { WELCOME: 0, NAME: 1, INSTR: 2, QUIZ: 3, RESULT: 4, BOARD: 5 }
 
 export default function App() {
   const [lang, setLang] = useState('it')
+  const [showSplash, setShowSplash] = useState(true)
   const [screen, setScreen] = useState(SCREENS.WELCOME)
   const [player, setPlayer] = useState(null)
   const [qIndex, setQIndex] = useState(0)
@@ -137,6 +139,7 @@ export default function App() {
 
   return (
     <div className="app">
+      {showSplash && <Splash lang={lang} onDone={() => setShowSplash(false)} />}
       <Header lang={lang} setLang={setLang} />
       <main className="app-main">
         {screen === SCREENS.WELCOME && (
