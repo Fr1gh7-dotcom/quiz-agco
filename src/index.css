@@ -28,10 +28,17 @@ html, body, #root { height: 100%; }
 
 body {
   font-family: 'Archivo', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  background: var(--paper-2);
   color: var(--ink);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  /* Sfondo brandizzato: griglia "blueprint" tenue + bagliore blu (richiamo industriale) */
+  background-color: #e9ebf0;
+  background-image:
+    radial-gradient(1100px 560px at 50% -12%, rgba(27, 58, 140, 0.10), transparent 60%),
+    linear-gradient(rgba(27, 58, 140, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(27, 58, 140, 0.045) 1px, transparent 1px);
+  background-size: auto, 30px 30px, 30px 30px;
+  background-attachment: fixed;
 }
 
 .app {
@@ -44,6 +51,21 @@ body {
   border-left: 1px solid var(--line);
   border-right: 1px solid var(--line);
   padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
+}
+
+/* DESKTOP: card incorniciata e centrata sullo sfondo brandizzato */
+@media (min-width: 680px) {
+  body { min-height: 100vh; display: grid; place-items: center; padding: 40px 24px; }
+  .app {
+    min-height: min(740px, calc(100vh - 80px));
+    max-height: calc(100vh - 80px);
+    width: 100%;
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    box-shadow: 0 28px 70px rgba(21, 24, 29, 0.18), 0 2px 8px rgba(21, 24, 29, 0.06);
+    overflow: hidden;
+  }
+  .app-main { overflow-y: auto; }
 }
 
 /* Eyebrow / kicker label — sostituisce gli emoji con struttura tipografica */
@@ -229,3 +251,96 @@ h2 { font-family: 'Noto Serif', Georgia, serif; font-size: 22px; font-weight: 60
   color: var(--ink-soft); background: var(--paper-2);
   border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; line-height: 1.5;
 }
+
+/* ============================================================
+   SCHERMO LIVE /classifica (scoreboard scuro per TV/monitor)
+   ============================================================ */
+.display {
+  min-height: 100vh; background: var(--header); color: #fff;
+  max-width: 1000px; margin: 0 auto; font-family: 'Archivo', sans-serif;
+  padding: clamp(22px, 3.5vw, 44px) clamp(18px, 4vw, 56px) 56px;
+}
+.disp-header { position: relative; border-bottom: 2px solid var(--agco-red); padding-bottom: 18px; margin-bottom: 8px; }
+.disp-title { display: flex; align-items: center; gap: 10px; }
+.disp-title .eyebrow { color: rgba(255,255,255,0.66); }
+.live-dot { width: 9px; height: 9px; border-radius: 50%; background: #34d058; box-shadow: 0 0 0 0 rgba(52,208,88,0.6); animation: pulse 1.8s infinite; }
+@keyframes pulse { 0%{box-shadow:0 0 0 0 rgba(52,208,88,0.6)} 70%{box-shadow:0 0 0 10px rgba(52,208,88,0)} 100%{box-shadow:0 0 0 0 rgba(52,208,88,0)} }
+.display h1 { font-family: 'Noto Serif', serif; color: #fff; font-size: clamp(26px, 4vw, 42px); margin-top: 6px; }
+.disp-meta { display: flex; gap: 18px; margin-top: 8px; color: rgba(255,255,255,0.6); font-size: 13px; font-variant-numeric: tabular-nums; }
+.disp-meta b { color: #fff; }
+
+.disp-admin { position: absolute; top: 0; right: 0; display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.disp-note { color: rgba(255,255,255,0.5); font-size: 12px; }
+.abtn {
+  font-family: inherit; font-weight: 700; font-size: 13px; letter-spacing: 0.2px;
+  padding: 8px 14px; border-radius: 8px; cursor: pointer; border: 1px solid transparent;
+  background: var(--blue); color: #fff; transition: filter 0.15s, background 0.15s;
+}
+.abtn:hover:not(:disabled) { filter: brightness(1.1); }
+.abtn:disabled { opacity: 0.5; cursor: not-allowed; }
+.abtn-danger { background: var(--agco-red); }
+.abtn-ghost { background: transparent; border-color: rgba(255,255,255,0.28); color: #fff; }
+.abtn-ghost:hover { background: rgba(255,255,255,0.08); }
+
+.login-box { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin: 14px 0 4px; }
+.login-box input {
+  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px;
+  padding: 9px 12px; color: #fff; font-size: 14px; font-family: inherit; min-width: 180px;
+}
+.login-box input::placeholder { color: rgba(255,255,255,0.45); }
+.login-err { color: #ff8a8a; font-size: 13px; font-weight: 600; width: 100%; }
+
+.disp-empty { text-align: center; color: rgba(255,255,255,0.5); padding: 60px 0; font-size: 16px; }
+.disp-board { list-style: none; display: flex; flex-direction: column; margin-top: 18px; }
+.disp-row {
+  display: grid; grid-template-columns: 56px 1fr auto auto; align-items: center; gap: clamp(10px, 2vw, 22px);
+  padding: clamp(12px, 1.6vw, 18px) 12px; border-bottom: 1px solid rgba(255,255,255,0.09);
+  font-size: clamp(16px, 2.2vw, 22px);
+}
+.dr-rank { font-weight: 800; text-align: center; color: rgba(255,255,255,0.5); font-variant-numeric: tabular-nums; }
+.dr-name { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dr-score { font-weight: 800; text-align: right; font-variant-numeric: tabular-nums; color: #fff; }
+.dr-time { text-align: right; color: rgba(255,255,255,0.5); font-size: 0.7em; font-variant-numeric: tabular-nums; }
+.disp-row.podium .dr-rank { font-size: 1.15em; }
+.disp-row.p1 .dr-rank { color: #ffcf3f; }
+.disp-row.p2 .dr-rank { color: #cdd3dc; }
+.disp-row.p3 .dr-rank { color: #e0915a; }
+.disp-row.p1 { background: linear-gradient(90deg, rgba(255,207,63,0.12), transparent); }
+.disp-row.is-new { animation: flashNew 2.2s var(--ease); }
+@keyframes flashNew { 0%,30% { background: rgba(52,208,88,0.28); } 100% { background: transparent; } }
+.dr-del {
+  background: transparent; border: 1px solid rgba(255,255,255,0.25); color: #fff; cursor: pointer;
+  width: 28px; height: 28px; border-radius: 7px; font-size: 18px; line-height: 1; opacity: 0.6;
+}
+.dr-del:hover { opacity: 1; background: var(--agco-red); border-color: var(--agco-red); }
+
+/* ============================================================
+   EDITOR DOMANDE (admin)
+   ============================================================ */
+.qedit { min-height: 100vh; background: var(--paper-2); color: var(--ink); max-width: 840px; margin: 0 auto; padding: 22px clamp(16px, 3vw, 32px) 60px; font-family: 'Archivo', sans-serif; }
+.qedit-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; position: sticky; top: 0; background: var(--paper-2); padding: 10px 0 14px; z-index: 5; }
+.qedit-top h2 { font-family: 'Noto Serif', serif; font-size: 19px; }
+.qedit-top .abtn-ghost { color: var(--ink); border-color: var(--line-strong); }
+.qedit-top .abtn-ghost:hover { background: var(--paper-3); }
+.qedit-msg { padding: 16px 0; color: var(--ink-soft); }
+.qedit-msg.err { color: var(--agco-red); }
+
+.qcard { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 16px; margin-bottom: 14px; }
+.qcard.inactive { opacity: 0.6; }
+.qcard-row { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 12px; }
+.qcard label { display: flex; flex-direction: column; gap: 4px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; color: var(--ink-faint); }
+.qf-ord { width: 80px; } .qf-cer { width: 130px; } .qf-cat { flex: 1; min-width: 120px; }
+.qf-active { flex-direction: row !important; align-items: center; gap: 6px; text-transform: none; align-self: flex-end; padding-bottom: 8px; }
+.qcard input[type="text"], .qcard input[type="number"], .qcard textarea {
+  background: var(--paper); border: 1px solid var(--line-strong); border-radius: 8px;
+  padding: 9px 10px; color: var(--ink); font-size: 14px; font-family: inherit; width: 100%;
+}
+.qcard input:focus, .qcard textarea:focus { outline: none; border-color: var(--blue); }
+.qlang { border-top: 1px dashed var(--line); padding-top: 12px; margin-top: 12px; position: relative; }
+.qlang-tag { font-size: 10px; font-weight: 800; letter-spacing: 1px; color: var(--blue); background: var(--paper-3); padding: 2px 7px; border-radius: 4px; }
+.qf-dom { margin: 8px 0; resize: vertical; }
+.qf-opt { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.qf-opt input[type="radio"] { width: auto; flex-shrink: 0; accent-color: var(--green); }
+.qf-letter { width: 18px; font-weight: 800; color: var(--ink-soft); font-size: 13px; }
+.qf-note { margin-top: 8px; font-size: 13px !important; }
+.qcard-actions { display: flex; gap: 8px; margin-top: 14px; }

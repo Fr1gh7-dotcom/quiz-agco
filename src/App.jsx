@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import questions from './data/questions.json'
+import fallbackQuestions from './data/questions.json'
 import Header from './components/Header.jsx'
 import Welcome from './components/Welcome.jsx'
 import NameInput from './components/NameInput.jsx'
@@ -8,7 +8,7 @@ import Question from './components/Question.jsx'
 import Result from './components/Result.jsx'
 import Leaderboard from './components/Leaderboard.jsx'
 import { totalScore, correctCount, totalSeconds } from './lib/scoring.js'
-import { submitScore, getLeaderboard, hasPlayed, markPlayed, alreadyPlayedByName } from './lib/storage.js'
+import { submitScore, getLeaderboard, hasPlayed, markPlayed, alreadyPlayedByName, getQuestions } from './lib/storage.js'
 
 const SCREENS = { WELCOME: 0, NAME: 1, INSTR: 2, QUIZ: 3, RESULT: 4, BOARD: 5 }
 
@@ -24,6 +24,14 @@ export default function App() {
   const [saving, setSaving] = useState(false)
   const [locked, setLocked] = useState(false)
   const [checking, setChecking] = useState(false)
+  const [questions, setQuestions] = useState(fallbackQuestions)
+
+  // Carica le domande dal DB (fallback al JSON). Solo prima dell'inizio quiz.
+  useEffect(() => {
+    getQuestions().then((qs) => {
+      if (qs && qs.length) setQuestions(qs)
+    })
+  }, [])
 
   // Carica classifica + calcola rank, evidenziando l'entry. Non naviga.
   async function loadBoard(entry) {

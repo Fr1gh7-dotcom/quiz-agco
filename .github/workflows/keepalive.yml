@@ -1,0 +1,25 @@
+name: Supabase keep-alive
+
+# Il free tier di Supabase mette in pausa il progetto dopo 7 giorni di inattività.
+# Questo job fa una query banale ogni 4 giorni per tenerlo sveglio.
+# (L'anon key è pubblica per design — finisce già nel bundle del sito.)
+#
+# ALTERNATIVA senza GitHub: crea un job gratuito su https://cron-job.org
+# che ogni ~4 giorni fa GET su:
+#   https://fhhvztdypcedjmncvckj.supabase.co/rest/v1/leaderboard?select=id&limit=1
+# con header:  apikey: <anon key>
+
+on:
+  schedule:
+    - cron: '0 6 */4 * *' # ogni 4 giorni alle 06:00 UTC
+  workflow_dispatch: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase REST
+        run: |
+          curl -sS -o /dev/null -w "HTTP %{http_code}\n" \
+            "https://fhhvztdypcedjmncvckj.supabase.co/rest/v1/leaderboard?select=id&limit=1" \
+            -H "apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZoaHZ6dGR5cGNlZGptbmN2Y2tqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzMjUyMTYsImV4cCI6MjA5NTkwMTIxNn0.k2XAVFxVuKD1MLbttacCJbekC1wQ7bnv7oW6TrxTnZc"
