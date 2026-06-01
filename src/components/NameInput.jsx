@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { Button } from './ui/button.jsx'
+import { Input } from './ui/input.jsx'
 import { t } from '../i18n.js'
 
 export default function NameInput({ lang, onConfirm, checking }) {
@@ -16,33 +18,33 @@ export default function NameInput({ lang, onConfirm, checking }) {
   }
 
   return (
-    <form className="screen name-input" onSubmit={submit}>
-      <span className="eyebrow">{tr.kickerPlayer}</span>
-      <h2>{tr.welcomeTitle}</h2>
-      <label>
+    <form className="screen justify-center gap-4" onSubmit={submit}>
+      <span className="eyebrow -mb-1">{tr.kickerPlayer}</span>
+      <h2 className="font-serif text-[22px] font-semibold leading-tight">{tr.welcomeTitle}</h2>
+
+      <label className="flex flex-col gap-1.5 text-[13px] font-semibold text-muted-foreground">
         {tr.nome}
-        <input
-          type="text"
+        <Input
           value={nome}
           onChange={(e) => setNome(e.target.value)}
           placeholder={tr.nomePlaceholder}
           autoComplete="given-name"
         />
       </label>
-      <label>
+      <label className="flex flex-col gap-1.5 text-[13px] font-semibold text-muted-foreground">
         {tr.cognome}
-        <input
-          type="text"
+        <Input
           value={cognome}
           onChange={(e) => setCognome(e.target.value)}
           placeholder={tr.cognomePlaceholder}
           autoComplete="family-name"
         />
       </label>
-      {touched && !valid && <p className="error">{tr.validation}</p>}
-      <button className="btn btn-primary btn-lg" type="submit" disabled={!valid || checking}>
+
+      {touched && !valid && <p className="text-[13.5px] font-semibold text-agco-red">{tr.validation}</p>}
+      <Button size="lg" type="submit" className="mt-2.5 w-full" disabled={!valid || checking}>
         {checking ? tr.checking : tr.start}
-      </button>
+      </Button>
     </form>
   )
 }

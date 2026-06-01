@@ -1,5 +1,13 @@
 import { useEffect, useState } from 'react'
+import { ArrowLeft, Plus, Save, Trash2 } from 'lucide-react'
 import { getAllQuestions, saveQuestion, deleteQuestion } from '../lib/storage.js'
+import { Button } from './ui/button.jsx'
+import { cn } from '@/lib/utils.js'
+
+const LETTERS = ['A', 'B', 'C', 'D']
+const fieldCls =
+  'w-full rounded-lg border border-input bg-card px-2.5 py-2 text-sm text-foreground focus:border-primary focus:outline-none'
+const labelCls = 'flex flex-col gap-1 text-[11px] font-bold uppercase tracking-wide text-muted-foreground/70'
 
 function blank(ordine) {
   return {
@@ -50,51 +58,50 @@ export default function QuestionEditor({ onBack }) {
   }
 
   return (
-    <div className="qedit">
-      <header className="qedit-top">
-        <button className="abtn abtn-ghost" onClick={onBack}>← Classifica</button>
-        <h2>Gestisci domande {list.length > 0 && `(${list.length})`}</h2>
-        <button className="abtn" onClick={addNew}>+ Nuova</button>
+    <div className="mx-auto min-h-screen max-w-[840px] bg-muted px-[clamp(16px,3vw,32px)] pb-16 pt-[22px] text-foreground">
+      <header className="sticky top-0 z-[5] flex items-center justify-between gap-3 bg-muted py-2.5 pb-3.5">
+        <Button variant="secondary" size="sm" onClick={onBack}><ArrowLeft className="size-4" /> Classifica</Button>
+        <h2 className="font-serif text-[19px] font-semibold">Gestisci domande {list.length > 0 && `(${list.length})`}</h2>
+        <Button size="sm" onClick={addNew}><Plus className="size-4" /> Nuova</Button>
       </header>
 
-      {loading && <p className="qedit-msg">Caricamento…</p>}
-      {err && <p className="qedit-msg err">Errore: {err}</p>}
+      {loading && <p className="py-4 text-muted-foreground">Caricamento…</p>}
+      {err && <p className="py-4 text-agco-red">Errore: {err}</p>}
 
       {list.map((q, i) => (
-        <div className={`qcard ${q.attiva ? '' : 'inactive'}`} key={q.id || `new-${i}`}>
-          <div className="qcard-row">
-            <label className="qf-ord">Ordine
-              <input type="number" value={q.ordine} onChange={(e) => patch(i, (x) => ({ ...x, ordine: Number(e.target.value) }))} />
+        <div key={q.id || `new-${i}`} className={cn('mb-3.5 rounded-xl border border-border bg-card p-4 shadow-elev-sm', !q.attiva && 'opacity-60')}>
+          <div className="mb-3 flex flex-wrap gap-3">
+            <label className={cn(labelCls, 'w-20')}>Ordine
+              <input type="number" className={fieldCls} value={q.ordine} onChange={(e) => patch(i, (x) => ({ ...x, ordine: Number(e.target.value) }))} />
             </label>
-            <label className="qf-cat">Categoria
-              <input type="text" value={q.categoria || ''} onChange={(e) => patch(i, (x) => ({ ...x, categoria: e.target.value }))} />
+            <label className={cn(labelCls, 'min-w-[120px] flex-1')}>Categoria
+              <input type="text" className={fieldCls} value={q.categoria || ''} onChange={(e) => patch(i, (x) => ({ ...x, categoria: e.target.value }))} />
             </label>
-            <label className="qf-cer">Codice EER
-              <input type="text" value={q.cer || ''} onChange={(e) => patch(i, (x) => ({ ...x, cer: e.target.value }))} />
+            <label className={cn(labelCls, 'w-[130px]')}>Codice EER
+              <input type="text" className={fieldCls} value={q.cer || ''} onChange={(e) => patch(i, (x) => ({ ...x, cer: e.target.value }))} />
             </label>
-            <label className="qf-active">
-              <input type="checkbox" checked={q.attiva} onChange={(e) => patch(i, (x) => ({ ...x, attiva: e.target.checked }))} /> attiva
+            <label className="flex items-center gap-1.5 self-end pb-2 text-sm font-semibold">
+              <input type="checkbox" className="accent-brand-green" checked={q.attiva} onChange={(e) => patch(i, (x) => ({ ...x, attiva: e.target.checked }))} /> attiva
             </label>
           </div>
 
           {['it', 'en'].map((lng) => (
-            <div className="qlang" key={lng}>
-              <span className="qlang-tag">{lng.toUpperCase()}</span>
+            <div key={lng} className="relative mt-3 border-t border-dashed border-border pt-3">
+              <span className="rounded bg-accent px-1.5 py-0.5 text-[10px] font-extrabold tracking-wider text-primary">{lng.toUpperCase()}</span>
               <textarea
-                className="qf-dom" rows={2} placeholder={`Domanda (${lng})`}
+                rows={2} placeholder={`Domanda (${lng})`} className={cn(fieldCls, 'my-2 resize-y')}
                 value={q[lng].domanda}
                 onChange={(e) => patch(i, (x) => ({ ...x, [lng]: { ...x[lng], domanda: e.target.value } }))}
               />
               {q[lng].opzioni.map((opt, oi) => (
-                <div className="qf-opt" key={oi}>
+                <div key={oi} className="mb-1.5 flex items-center gap-2">
                   <input
-                    type="radio" name={`corr-${q.id || i}`} checked={q.rispostaCorretta === oi}
-                    onChange={() => patch(i, (x) => ({ ...x, rispostaCorretta: oi }))}
-                    title="Risposta corretta"
+                    type="radio" name={`corr-${q.id || i}`} checked={q.rispostaCorretta === oi} className="shrink-0 accent-brand-green"
+                    onChange={() => patch(i, (x) => ({ ...x, rispostaCorretta: oi }))} title="Risposta corretta"
                   />
-                  <span className="qf-letter">{['A', 'B', 'C', 'D'][oi]}</span>
+                  <span className="w-[18px] text-[13px] font-extrabold text-muted-foreground">{LETTERS[oi]}</span>
                   <input
-                    type="text" placeholder={`Opzione ${['A', 'B', 'C', 'D'][oi]} (${lng})`} value={opt}
+                    type="text" placeholder={`Opzione ${LETTERS[oi]} (${lng})`} value={opt} className={fieldCls}
                     onChange={(e) => patch(i, (x) => {
                       const opzioni = [...x[lng].opzioni]; opzioni[oi] = e.target.value
                       return { ...x, [lng]: { ...x[lng], opzioni } }
@@ -103,16 +110,16 @@ export default function QuestionEditor({ onBack }) {
                 </div>
               ))}
               <input
-                className="qf-note" type="text" placeholder={`Nota (${lng}) — opzionale`}
+                type="text" placeholder={`Nota (${lng}) — opzionale`} className={cn(fieldCls, 'mt-2')}
                 value={q.note?.[lng] || ''}
                 onChange={(e) => patch(i, (x) => ({ ...x, note: { ...x.note, [lng]: e.target.value } }))}
               />
             </div>
           ))}
 
-          <div className="qcard-actions">
-            <button className="abtn" onClick={() => save(i)}>Salva</button>
-            <button className="abtn abtn-danger" onClick={() => remove(i)}>Elimina</button>
+          <div className="mt-3.5 flex gap-2">
+            <Button size="sm" onClick={() => save(i)}><Save className="size-4" /> Salva</Button>
+            <Button variant="destructive" size="sm" onClick={() => remove(i)}><Trash2 className="size-4" /> Elimina</Button>
           </div>
         </div>
       ))}

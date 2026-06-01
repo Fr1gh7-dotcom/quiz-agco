@@ -1,21 +1,28 @@
+import { Medal } from 'lucide-react'
+import { Button } from './ui/button.jsx'
+import { cn } from '@/lib/utils.js'
 import { t } from '../i18n.js'
+
+const MEDAL = ['text-podium-gold', 'text-podium-silver', 'text-podium-bronze']
 
 export default function Leaderboard({ lang, rows, me, onPlayAgain, locked }) {
   const tr = t[lang]
   return (
-    <div className="screen leaderboard">
-      <span className="eyebrow">{tr.leaderboardTitle}</span>
-      <h2>{tr.leaderboardSub}</h2>
+    <div className="screen gap-3.5">
+      <span className="eyebrow flex items-center gap-2.5 before:h-0.5 before:w-[26px] before:bg-agco-red">
+        {tr.leaderboardTitle}
+      </span>
+      <h2 className="font-serif text-[22px] font-semibold leading-tight">{tr.leaderboardSub}</h2>
 
       {rows.length === 0 ? (
-        <p className="empty">{tr.emptyBoard}</p>
+        <p className="py-9 text-center text-muted-foreground/70">{tr.emptyBoard}</p>
       ) : (
-        <ol className="board">
-          <li className="board-head">
-            <span className="b-rank">{tr.rank}</span>
-            <span className="b-name">{tr.player}</span>
-            <span className="b-score">{tr.score}</span>
-            <span className="b-time">{tr.time}</span>
+        <ol className="flex flex-col">
+          <li className="grid grid-cols-[30px_1fr_58px_50px] gap-2.5 px-3 py-1 text-[10px] font-bold uppercase tracking-wide text-muted-foreground/70">
+            <span className="text-center">{tr.rank}</span>
+            <span>{tr.player}</span>
+            <span className="text-right">{tr.score}</span>
+            <span className="text-right">{tr.time}</span>
           </li>
           {rows.map((r, i) => {
             const isMe =
@@ -24,15 +31,25 @@ export default function Leaderboard({ lang, rows, me, onPlayAgain, locked }) {
               r.cognome === me.cognome &&
               r.punteggio === me.punteggio &&
               r.tempoTotaleSecondi === me.tempoTotaleSecondi
-            const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : null
             return (
-              <li key={i} className={`board-row ${isMe ? 'me' : ''} ${i < 3 ? 'podium p' + (i + 1) : ''}`}>
-                <span className="b-rank">{medal ? <span className="b-medal" aria-hidden="true">{medal}</span> : i + 1}</span>
-                <span className="b-name">
-                  {r.nome} {r.cognome} {isMe && <em>({tr.you})</em>}
+              <li
+                key={i}
+                className={cn(
+                  'grid grid-cols-[30px_1fr_58px_50px] items-center gap-2.5 border-b border-border px-3 py-3 text-sm',
+                  i === 0 && 'rounded-lg border-b-transparent bg-gradient-to-r from-podium-gold/10 to-transparent',
+                  isMe && 'rounded-lg border-b-transparent bg-primary/[0.05]'
+                )}
+              >
+                <span className="tabular flex justify-center text-center font-extrabold text-muted-foreground">
+                  {i < 3 ? <Medal className={cn('size-[18px]', MEDAL[i])} aria-hidden="true" /> : i + 1}
                 </span>
-                <span className="b-score">{r.punteggio}</span>
-                <span className="b-time">{Math.round(r.tempoTotaleSecondi)}{tr.seconds}</span>
+                <span className="truncate font-semibold">
+                  {r.nome} {r.cognome} {isMe && <em className="font-bold not-italic text-primary">({tr.you})</em>}
+                </span>
+                <span className="tabular text-right font-extrabold">{r.punteggio}</span>
+                <span className="tabular text-right text-muted-foreground/70">
+                  {Math.round(r.tempoTotaleSecondi)}{tr.seconds}
+                </span>
               </li>
             )
           })}
@@ -40,11 +57,13 @@ export default function Leaderboard({ lang, rows, me, onPlayAgain, locked }) {
       )}
 
       {locked ? (
-        <p className="locked-note">{tr.alreadyDone}</p>
+        <p className="mt-2 rounded-lg border border-border bg-muted px-4 py-3.5 text-center text-[13.5px] font-semibold leading-relaxed text-muted-foreground">
+          {tr.alreadyDone}
+        </p>
       ) : (
-        <button className="btn btn-secondary btn-lg" onClick={onPlayAgain}>
+        <Button variant="secondary" size="lg" className="mt-2 w-full" onClick={onPlayAgain}>
           {tr.playAgain}
-        </button>
+        </Button>
       )}
     </div>
   )
