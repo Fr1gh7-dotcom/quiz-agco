@@ -30,6 +30,40 @@ export function markPlayed(entry) {
   }
 }
 
+// ---- Ripresa quiz dopo reload (progressi salvati nel device) ----
+const PROGRESS_KEY = 'agco_quiz_progress'
+const PROGRESS_TTL_MS = 2 * 60 * 60 * 1000 // 2 ore: oltre, partita considerata abbandonata
+
+export function saveProgress(p) {
+  try {
+    localStorage.setItem(PROGRESS_KEY, JSON.stringify({ ...p, ts: Date.now() }))
+  } catch {
+    /* ignora */
+  }
+}
+
+export function loadProgress() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(PROGRESS_KEY) || 'null')
+    if (!raw) return null
+    if (Date.now() - (raw.ts || 0) > PROGRESS_TTL_MS) {
+      localStorage.removeItem(PROGRESS_KEY)
+      return null
+    }
+    return raw
+  } catch {
+    return null
+  }
+}
+
+export function clearProgress() {
+  try {
+    localStorage.removeItem(PROGRESS_KEY)
+  } catch {
+    /* ignora */
+  }
+}
+
 // Backstop lato server: il nome+cognome ha già giocato? (case-insensitive)
 // Copre i casi in cui localStorage non persiste (webview QR, modalità privata).
 export async function alreadyPlayedByName(nome, cognome) {

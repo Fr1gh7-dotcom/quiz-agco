@@ -8,7 +8,7 @@ import Question from './components/Question.jsx'
 import Result from './components/Result.jsx'
 import Leaderboard from './components/Leaderboard.jsx'
 import { totalScore, correctCount, totalSeconds } from './lib/scoring.js'
-import { submitScore, getLeaderboard, hasPlayed, markPlayed, alreadyPlayedByName, getQuestions } from './lib/storage.js'
+import { submitScore, getLeaderboard, hasPlayed, markPlayed, alreadyPlayedByName, getQuestions, saveProgress, loadProgress, clearProgress } from './lib/storage.js'
 
 const SCREENS = { WELCOME: 0, NAME: 1, INSTR: 2, QUIZ: 3, RESULT: 4, BOARD: 5 }
 
@@ -55,11 +55,27 @@ export default function App() {
     setScreen(SCREENS.BOARD)
   }
 
-  // Una volta sola per device: se ha già giocato, mostra direttamente la classifica.
+  // Al mount: se ha già finito → classifica bloccata. Altrimenti, se c'è una
+  // partita interrotta da un reload → riprende dalla domanda dove era rimasto.
   useEffect(() => {
     const prev = hasPlayed()
-    if (prev) showLockedBoard(prev)
+    if (prev) { showLockedBoard(prev); return }
+    const prog = loadProgress()
+    if (prog && prog.player && Array.isArray(prog.answers) && prog.answers.length < fallbackQuestions.length) {
+      if (prog.lang) setLang(prog.lang)
+      setPlayer(prog.player)
+      setAnswers(prog.answers)
+      setQIndex(prog.answers.length)
+      setScreen(SCREENS.QUIZ)
+    }
   }, [])
+
+  // Salva i progressi durante il quiz (per riprendere dopo un reload).
+  useEffect(() => {
+    if (screen === SCREENS.QUIZ && player) {
+      saveProgress({ player, answers, lang })
+    }
+  }, [screen, qIndex, answers, player, lang])
 
   async function confirmName(p) {
     setPlayer(p)
@@ -76,6 +92,7 @@ export default function App() {
   }
 
   function reset() {
+    clearProgress()
     setScreen(SCREENS.WELCOME)
     setPlayer(null)
     setQIndex(0)
@@ -90,6 +107,7 @@ export default function App() {
   }
 
   async function finishQuiz(finalAnswers) {
+    clearProgress()
     setScreen(SCREENS.RESULT)
     setSaving(true)
     const entry = {
