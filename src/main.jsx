@@ -8,6 +8,9 @@ import './index.css'
 const path = window.location.pathname.replace(/\/+$/, '')
 const isDisplay = path === '/classifica' || path === '/admin'
 
+// Lo schermo classifica è a tutto schermo scuro (no sfondo blueprint, no card centrata)
+if (isDisplay) document.body.classList.add('display-mode')
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>{isDisplay ? <Display /> : <App />}</React.StrictMode>
 )

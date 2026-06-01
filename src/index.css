@@ -255,6 +255,9 @@ h2 { font-family: 'Noto Serif', Georgia, serif; font-size: 22px; font-weight: 60
 /* ============================================================
    SCHERMO LIVE /classifica (scoreboard scuro per TV/monitor)
    ============================================================ */
+/* Display: tutto schermo scuro (sovrascrive centraggio/sfondo del quiz) */
+body.display-mode { display: block; padding: 0; min-height: 100vh; background: var(--header); }
+
 .display {
   min-height: 100vh; background: var(--header); color: #fff;
   max-width: 1000px; margin: 0 auto; font-family: 'Archivo', sans-serif;
