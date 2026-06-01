@@ -1,0 +1,14 @@
+node_modules
+dist
+.env
+.env.local
+.DS_Store
+*.log
+screenshots/
+.venv/
+qr/
+*.zip
+ISTRUZIONI.pdf
+presentazione/preview-*.png
+presentazione/slides/
+.vercel

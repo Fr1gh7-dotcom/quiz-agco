@@ -1,0 +1,252 @@
+[
+  {
+    "id": 1,
+    "categoria": "imballaggi",
+    "it": {
+      "domanda": "Gli imballaggi di carta e cartone possono essere messi nel bidone apposito anche se sporchi di grasso?",
+      "opzioni": [
+        "Sì, sempre",
+        "No, devono essere puliti da grasso e liquidi",
+        "Sì, ma solo se il grasso è in piccola quantità",
+        "Vanno nel bidone degli imballaggi misti"
+      ]
+    },
+    "en": {
+      "domanda": "Can paper and cardboard packaging be put in the dedicated bin even if dirty with grease?",
+      "opzioni": [
+        "Yes, always",
+        "No, they must be clean from grease and liquids",
+        "Yes, but only if there's a small amount of grease",
+        "They go in the mixed packaging bin"
+      ]
+    },
+    "rispostaCorretta": 1,
+    "cer": "15.01.01",
+    "note": { "it": "Vale anche per cellophane/nylon (15.01.02)", "en": "Also applies to cellophane/nylon (15.01.02)" }
+  },
+  {
+    "id": 2,
+    "categoria": "assorbenti",
+    "it": {
+      "domanda": "Filtri esausti, guanti e stracci sporchi: in quale contenitore vanno?",
+      "opzioni": [
+        "Ferro e acciaio",
+        "Rifiuto umido",
+        "Materiali assorbenti contaminati da sostanze pericolose [PERICOLOSO]",
+        "Imballaggi di materiale misto"
+      ]
+    },
+    "en": {
+      "domanda": "Used filters, dirty gloves and rags: which container do they go in?",
+      "opzioni": [
+        "Iron and steel",
+        "Wet waste",
+        "Absorbent materials contaminated with hazardous substances [HAZARDOUS]",
+        "Mixed material packaging"
+      ]
+    },
+    "rispostaCorretta": 2,
+    "cer": "15.02.02*",
+    "note": { "it": "HP14 — stesso contenitore per la segatura sporca d'olio", "en": "HP14 — same bin for oil-soaked sawdust" }
+  },
+  {
+    "id": 3,
+    "categoria": "bombolette",
+    "it": {
+      "domanda": "Le bombolette spray vuote sono un rifiuto pericoloso?",
+      "opzioni": [
+        "No, si buttano nel bidone ferro e acciaio",
+        "No, vanno negli imballaggi di materiale misto",
+        "Sì, sono rifiuto pericoloso — bidone imballaggi metallici pericolosi [PERICOLOSO]",
+        "Dipende dal contenuto originale"
+      ]
+    },
+    "en": {
+      "domanda": "Are empty spray cans hazardous waste?",
+      "opzioni": [
+        "No, throw them in the iron and steel bin",
+        "No, they go in mixed material packaging",
+        "Yes, they are hazardous waste — hazardous metal packaging bin [HAZARDOUS]",
+        "It depends on the original content"
+      ]
+    },
+    "rispostaCorretta": 2,
+    "cer": "15.01.11*",
+    "note": { "it": "HP3 — codice UN 1950", "en": "HP3 — UN code 1950" }
+  },
+  {
+    "id": 4,
+    "categoria": "fusti",
+    "it": {
+      "domanda": "Un fusto da 200L vuoto ma con residui di vernice/grasso: dove va?",
+      "opzioni": [
+        "Ferro e acciaio, è comunque un contenitore metallico",
+        "Imballaggi contenenti residui di sostanze pericolose [PERICOLOSO]",
+        "Rifiuti non specificati altrimenti",
+        "Imballaggi di materiale misto"
+      ]
+    },
+    "en": {
+      "domanda": "An empty 200L drum with paint/grease residue: where does it go?",
+      "opzioni": [
+        "Iron and steel, it's still a metal container",
+        "Packaging containing residues of hazardous substances [HAZARDOUS]",
+        "Waste not otherwise specified",
+        "Mixed material packaging"
+      ]
+    },
+    "rispostaCorretta": 1,
+    "cer": "15.01.10*",
+    "note": { "it": "HP3/HP4/HP13/HP14 — vale anche per cisternette e tanichette contaminate", "en": "HP3/HP4/HP13/HP14 — also IBCs and contaminated cans" }
+  },
+  {
+    "id": 5,
+    "categoria": "neon",
+    "it": {
+      "domanda": "I neon (tubi fluorescenti) esauriti sono classificati come:",
+      "opzioni": [
+        "RAEE — vanno con PC e stampanti",
+        "Ferro e acciaio",
+        "Rifiuto pericoloso — tubi fluorescenti contenenti mercurio [PERICOLOSO]",
+        "Imballaggi di materiale misto"
+      ]
+    },
+    "en": {
+      "domanda": "Spent neon tubes (fluorescent) are classified as:",
+      "opzioni": [
+        "WEEE — they go with PCs and printers",
+        "Iron and steel",
+        "Hazardous waste — fluorescent tubes containing mercury [HAZARDOUS]",
+        "Mixed material packaging"
+      ]
+    },
+    "rispostaCorretta": 2,
+    "cer": "20.01.21*",
+    "note": { "it": "HP5/HP6 — bidone separato, non con i RAEE", "en": "HP5/HP6 — separate bin, not with WEEE" }
+  },
+  {
+    "id": 6,
+    "categoria": "batterie",
+    "it": {
+      "domanda": "Batterie al piombo e batterie al litio: possono andare nello stesso contenitore?",
+      "opzioni": [
+        "Sì, sono entrambe batterie",
+        "No — piombo (16.06.01*) è pericoloso, litio (16.06.05) no — bidoni separati",
+        "No, ma solo perché sono di dimensioni diverse",
+        "Sì, se entrambe scariche"
+      ]
+    },
+    "en": {
+      "domanda": "Lead batteries and lithium batteries: can they go in the same container?",
+      "opzioni": [
+        "Yes, they are both batteries",
+        "No — lead (16.06.01*) is hazardous, lithium (16.06.05) is not — separate bins",
+        "No, but only because they are different sizes",
+        "Yes, if both discharged"
+      ]
+    },
+    "rispostaCorretta": 1,
+    "cer": "16.06.01* vs 16.06.05",
+    "note": { "it": "16.06.01* = piombo pericoloso HP5/HP6/HP10 — 16.06.05 = litio non pericoloso", "en": "16.06.01* = lead hazardous HP5/HP6/HP10 — 16.06.05 = lithium non-hazardous" }
+  },
+  {
+    "id": 7,
+    "categoria": "oleodinamici",
+    "it": {
+      "domanda": "I tubi oleodinamici dismessi vanno classificati come:",
+      "opzioni": [
+        "Ferro e acciaio — sono tubi metallici",
+        "Rifiuti non specificati altrimenti",
+        "Componenti pericolosi — bidone specifico [PERICOLOSO]",
+        "Emulsioni oleose"
+      ]
+    },
+    "en": {
+      "domanda": "Disposed hydraulic pipes are classified as:",
+      "opzioni": [
+        "Iron and steel — they are metal pipes",
+        "Waste not otherwise specified",
+        "Hazardous components — specific bin [HAZARDOUS]",
+        "Oil emulsions"
+      ]
+    },
+    "rispostaCorretta": 2,
+    "cer": "16.01.21*",
+    "note": { "it": "HP7/HP14 — l'olio residuo li rende pericolosi", "en": "HP7/HP14 — residual oil makes them hazardous" }
+  },
+  {
+    "id": 8,
+    "categoria": "polverilaser",
+    "it": {
+      "domanda": "Le polveri prodotte dal taglio laser: pericolose o no?",
+      "opzioni": [
+        "No — vanno con la limatura di metalli ferrosi",
+        "No — vanno con ferro e acciaio",
+        "Sì — polveri laser = rifiuto pericoloso da trattamento fumi [PERICOLOSO]",
+        "Dipende dal materiale tagliato"
+      ]
+    },
+    "en": {
+      "domanda": "Dust produced from laser cutting: hazardous or not?",
+      "opzioni": [
+        "No — they go with ferrous metal filings",
+        "No — they go with iron and steel",
+        "Yes — laser dust = hazardous waste from fume treatment [HAZARDOUS]",
+        "It depends on the cut material"
+      ]
+    },
+    "rispostaCorretta": 2,
+    "cer": "10.02.07* vs 12.01.02",
+    "note": { "it": "10.02.07* HP14 polveri fumi — 12.01.02 frammenti ferrosi (non pericoloso) — DUE BIDONI DIVERSI", "en": "10.02.07* HP14 fume dust — 12.01.02 ferrous fragments (non-hazardous) — TWO DIFFERENT BINS" }
+  },
+  {
+    "id": 9,
+    "categoria": "plastica",
+    "it": {
+      "domanda": "Tappi, polistirolo, regge e bottiglie di plastica: dove vanno?",
+      "opzioni": [
+        "Imballaggi di plastica",
+        "Rifiuto umido",
+        "Imballaggi di materiale misto",
+        "Rifiuti non specificati altrimenti"
+      ]
+    },
+    "en": {
+      "domanda": "Caps, polystyrene, straps and plastic bottles: where do they go?",
+      "opzioni": [
+        "Plastic packaging",
+        "Wet waste",
+        "Mixed material packaging",
+        "Waste not otherwise specified"
+      ]
+    },
+    "rispostaCorretta": 2,
+    "cer": "15.01.06",
+    "note": { "it": "Materiale misto, non plastica pura", "en": "Mixed material, not pure plastic" }
+  },
+  {
+    "id": 10,
+    "categoria": "olio",
+    "it": {
+      "domanda": "L'olio minerale per motori e lubrificazione è un rifiuto pericoloso?",
+      "opzioni": [
+        "Sì — deve essere smaltito nel contenitore specifico per oli minerali [PERICOLOSO]",
+        "No — può andare negli imballaggi contaminati",
+        "No — basta assorbirlo con segatura e buttare quella",
+        "Dipende dalla quantità"
+      ]
+    },
+    "en": {
+      "domanda": "Mineral oil for engines and lubrication is hazardous waste?",
+      "opzioni": [
+        "Yes — must be disposed of in the specific container for mineral oils [HAZARDOUS]",
+        "No — it can go in contaminated packaging",
+        "No — just absorb it with sawdust and throw that away",
+        "It depends on the quantity"
+      ]
+    },
+    "rispostaCorretta": 0,
+    "cer": "13.02.05*",
+    "note": { "it": "HP4/HP5/HP14 — la segatura assorbente diventa anch'essa 15.02.02*", "en": "HP4/HP5/HP14 — absorbent sawdust also becomes 15.02.02*" }
+  }
+]
