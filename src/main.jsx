@@ -12,5 +12,5 @@ const isDisplay = path === '/classifica' || path === '/admin'
 if (isDisplay) document.body.classList.add('display-mode')
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>{isDisplay ? <Display /> : <App />}</React.StrictMode>
+  <React.StrictMode>{isDisplay ? <Display admin={path === '/admin'} /> : <App />}</React.StrictMode>
 )

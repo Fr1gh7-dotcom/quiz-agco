@@ -7,12 +7,12 @@ import QuestionEditor from './components/QuestionEditor.jsx'
 
 const POLL_MS = 4000
 
-export default function Display() {
+export default function Display({ admin = false }) {
   const [rows, setRows] = useState([])
   const [loadedAt, setLoadedAt] = useState(null)
   const [session, setSession] = useState(null)
+  const [sessionReady, setSessionReady] = useState(false)
   const [view, setView] = useState('board') // 'board' | 'questions'
-  const [showLogin, setShowLogin] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [authErr, setAuthErr] = useState('')
@@ -21,7 +21,7 @@ export default function Display() {
 
   // Auth
   useEffect(() => {
-    getSession().then(setSession)
+    getSession().then((s) => { setSession(s); setSessionReady(true) })
     return onAuthChange(setSession)
   }, [])
 
@@ -45,7 +45,7 @@ export default function Display() {
     setAuthErr(''); setBusy(true)
     try {
       await signIn(email.trim(), password)
-      setShowLogin(false); setPassword('')
+      setPassword('')
     } catch (err) {
       setAuthErr(err.message || 'Login fallito')
     } finally { setBusy(false) }
@@ -67,7 +67,30 @@ export default function Display() {
     finally { setBusy(false) }
   }
 
-  const isAdmin = Boolean(session)
+  const isAdmin = admin && Boolean(session)
+
+  // Rotta /admin: se non loggato → schermata di accesso (niente board).
+  if (admin && sessionReady && !session) {
+    return (
+      <div className="display login-gate">
+        <form className="gate-card" onSubmit={doLogin}>
+          <span className="eyebrow">Area riservata</span>
+          <h1>Accesso admin</h1>
+          {!SUPABASE_ENABLED ? (
+            <p className="gate-note">DB non configurato.</p>
+          ) : (
+            <>
+              <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="username" />
+              <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password" />
+              <button className="abtn" type="submit" disabled={busy}>{busy ? '…' : 'Entra'}</button>
+              {authErr && <span className="login-err">{authErr}</span>}
+            </>
+          )}
+          <a className="gate-link" href="/classifica">← Classifica pubblica</a>
+        </form>
+      </div>
+    )
+  }
 
   if (view === 'questions' && isAdmin) {
     return <QuestionEditor onBack={() => setView('board')} />
@@ -86,29 +109,14 @@ export default function Display() {
           {loadedAt && <span>agg. {loadedAt.toLocaleTimeString('it-IT')}</span>}
         </div>
 
-        <div className="disp-admin">
-          {!SUPABASE_ENABLED ? (
-            <span className="disp-note">DB non configurato</span>
-          ) : isAdmin ? (
-            <>
-              <button className="abtn" onClick={() => setView('questions')} disabled={busy}>Gestisci domande</button>
-              <button className="abtn abtn-danger" onClick={doReset} disabled={busy}>Azzera classifica</button>
-              <button className="abtn abtn-ghost" onClick={() => signOut()}>Esci</button>
-            </>
-          ) : (
-            <button className="abtn abtn-ghost" onClick={() => setShowLogin((s) => !s)}>Accedi</button>
-          )}
-        </div>
+        {isAdmin && (
+          <div className="disp-admin">
+            <button className="abtn" onClick={() => setView('questions')} disabled={busy}>Gestisci domande</button>
+            <button className="abtn abtn-danger" onClick={doReset} disabled={busy}>Azzera classifica</button>
+            <button className="abtn abtn-ghost" onClick={() => signOut()}>Esci</button>
+          </div>
+        )}
       </header>
-
-      {showLogin && !isAdmin && (
-        <form className="login-box" onSubmit={doLogin}>
-          <input type="email" placeholder="Email admin" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="username" />
-          <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password" />
-          <button className="abtn" type="submit" disabled={busy}>{busy ? '…' : 'Entra'}</button>
-          {authErr && <span className="login-err">{authErr}</span>}
-        </form>
-      )}
 
       {rows.length === 0 ? (
         <p className="disp-empty">In attesa dei primi partecipanti…</p>
