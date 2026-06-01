@@ -1,31 +1,33 @@
 import { useEffect, useRef, useState } from 'react'
+import { Medal, Trash2, Lock, RotateCcw, LogOut, Settings2 } from 'lucide-react'
 import {
   getLeaderboard, getSession, onAuthChange, signIn, signOut,
   resetLeaderboard, deleteEntry, SUPABASE_ENABLED,
 } from './lib/storage.js'
 import QuestionEditor from './components/QuestionEditor.jsx'
+import { Button } from './components/ui/button.jsx'
+import { cn } from '@/lib/utils.js'
 
 const POLL_MS = 4000
+const MEDAL = ['text-podium-gold', 'text-podium-silver', 'text-podium-bronze']
 
 export default function Display({ admin = false }) {
   const [rows, setRows] = useState([])
   const [loadedAt, setLoadedAt] = useState(null)
   const [session, setSession] = useState(null)
   const [sessionReady, setSessionReady] = useState(false)
-  const [view, setView] = useState('board') // 'board' | 'questions'
+  const [view, setView] = useState('board')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [authErr, setAuthErr] = useState('')
   const [busy, setBusy] = useState(false)
-  const seen = useRef(null) // Set di id già visti (per evidenziare i nuovi)
+  const seen = useRef(null)
 
-  // Auth
   useEffect(() => {
     getSession().then((s) => { setSession(s); setSessionReady(true) })
     return onAuthChange(setSession)
   }, [])
 
-  // Polling classifica
   useEffect(() => {
     let alive = true
     async function tick() {
@@ -43,12 +45,9 @@ export default function Display({ admin = false }) {
   async function doLogin(e) {
     e.preventDefault()
     setAuthErr(''); setBusy(true)
-    try {
-      await signIn(email.trim(), password)
-      setPassword('')
-    } catch (err) {
-      setAuthErr(err.message || 'Login fallito')
-    } finally { setBusy(false) }
+    try { await signIn(email.trim(), password); setPassword('') }
+    catch (err) { setAuthErr(err.message || 'Login fallito') }
+    finally { setBusy(false) }
   }
 
   async function doReset() {
@@ -69,24 +68,35 @@ export default function Display({ admin = false }) {
 
   const isAdmin = admin && Boolean(session)
 
-  // Rotta /admin: se non loggato → schermata di accesso (niente board).
+  // Rotta /admin non loggato → schermata di accesso.
   if (admin && sessionReady && !session) {
     return (
-      <div className="display login-gate">
-        <form className="gate-card" onSubmit={doLogin}>
-          <span className="eyebrow">Area riservata</span>
-          <h1>Accesso admin</h1>
+      <div className="grid min-h-screen place-items-center bg-grad-header px-5 text-white">
+        <form
+          onSubmit={doLogin}
+          className="flex w-full max-w-[340px] flex-col gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-7"
+        >
+          <span className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-[1.6px] text-white/55">
+            <Lock className="size-3.5" /> Area riservata
+          </span>
+          <h1 className="mb-1.5 font-serif text-2xl text-white">Accesso admin</h1>
           {!SUPABASE_ENABLED ? (
-            <p className="gate-note">DB non configurato.</p>
+            <p className="text-sm text-white/60">DB non configurato.</p>
           ) : (
             <>
-              <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="username" />
-              <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password" />
-              <button className="abtn" type="submit" disabled={busy}>{busy ? '…' : 'Entra'}</button>
-              {authErr && <span className="login-err">{authErr}</span>}
+              <input
+                type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="username"
+                className="rounded-lg border border-white/20 bg-white/[0.08] px-3 py-2.5 text-[15px] text-white placeholder:text-white/45 focus:border-primary focus:outline-none"
+              />
+              <input
+                type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password"
+                className="rounded-lg border border-white/20 bg-white/[0.08] px-3 py-2.5 text-[15px] text-white placeholder:text-white/45 focus:border-primary focus:outline-none"
+              />
+              <Button variant="dark" type="submit" disabled={busy} className="h-11">{busy ? '…' : 'Entra'}</Button>
+              {authErr && <span className="text-[13px] font-semibold text-red-300">{authErr}</span>}
             </>
           )}
-          <a className="gate-link" href="/classifica">← Classifica pubblica</a>
+          <a href="/classifica" className="mt-1 text-[13px] text-white/55 transition-colors hover:text-white">← Classifica pubblica</a>
         </form>
       </div>
     )
@@ -97,52 +107,66 @@ export default function Display({ admin = false }) {
   }
 
   return (
-    <div className="display">
-      <header className="disp-header">
+    <div className="mx-auto min-h-screen max-w-[1000px] bg-brand-header px-[clamp(18px,4vw,56px)] pb-14 pt-[clamp(22px,3.5vw,44px)] text-white">
+      <header className="relative mb-2 border-b-2 border-agco-red pb-[18px]">
         {!isAdmin && (
-          <div className="disp-brand">
-            <img src="/logo-agco.png" alt="AGCO" className="disp-logo" onError={(e) => { e.target.style.display = 'none' }} />
-            <img src="/logo-phtre.png" alt="PHTRE" className="disp-logo disp-logo-phtre" onError={(e) => { e.target.style.display = 'none' }} />
+          <div className="mb-3.5 flex items-center gap-4">
+            <img src="/logo-agco.png" alt="AGCO" className="h-[30px] w-auto object-contain" onError={(e) => { e.target.style.display = 'none' }} />
+            <img src="/logo-phtre.png" alt="PHTRE" className="h-[38px] w-auto rounded-md bg-white object-contain px-2.5 py-[5px]" onError={(e) => { e.target.style.display = 'none' }} />
           </div>
         )}
-        <div className="disp-title">
-          <span className="live-dot" />
-          <span className="eyebrow">Classifica in tempo reale</span>
+        <div className="flex items-center gap-2.5">
+          <span className="size-[9px] animate-live-pulse rounded-full bg-[#34d058]" />
+          <span className="display-eyebrow">Classifica in tempo reale</span>
         </div>
-        <h1>Quiz Rifiuti AGCO</h1>
-        <div className="disp-meta">
-          <span><b>{rows.length}</b> partecipanti</span>
+        <h1 className="mt-1.5 font-serif text-[clamp(26px,4vw,42px)] text-white">Quiz Rifiuti AGCO</h1>
+        <div className="tabular mt-2 flex gap-[18px] text-[13px] text-white/60">
+          <span><b className="text-white">{rows.length}</b> partecipanti</span>
           {loadedAt && <span>agg. {loadedAt.toLocaleTimeString('it-IT')}</span>}
         </div>
 
         {isAdmin && (
-          <div className="disp-admin">
-            <button className="abtn" onClick={() => setView('questions')} disabled={busy}>Gestisci domande</button>
-            <button className="abtn abtn-danger" onClick={doReset} disabled={busy}>Azzera classifica</button>
-            <button className="abtn abtn-ghost" onClick={() => signOut()}>Esci</button>
+          <div className="absolute right-0 top-0 flex flex-wrap justify-end gap-2">
+            <Button variant="dark" size="sm" onClick={() => setView('questions')} disabled={busy}><Settings2 className="size-4" /> Gestisci domande</Button>
+            <Button variant="destructive" size="sm" onClick={doReset} disabled={busy}><RotateCcw className="size-4" /> Azzera classifica</Button>
+            <Button variant="outline" size="sm" onClick={() => signOut()}><LogOut className="size-4" /> Esci</Button>
           </div>
         )}
       </header>
 
       {rows.length === 0 ? (
-        <p className="disp-empty">In attesa dei primi partecipanti…</p>
+        <p className="py-16 text-center text-base text-white/50">In attesa dei primi partecipanti…</p>
       ) : (
-        <ol className="disp-board">
+        <ol className="mt-5 flex flex-col gap-1">
           {rows.map((r, i) => {
             const isNew = seen.current && !seen.current.has(r.id)
             if (seen.current) seen.current.add(r.id)
-            const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : null
+            const podium = i < 3
             return (
-              <li key={r.id || i} className={`disp-row ${i < 3 ? 'podium p' + (i + 1) : ''} ${isNew ? 'is-new' : ''}`}>
-                <span className="dr-rank">
-                  {medal ? <span className="dr-medal" aria-hidden="true">{medal}</span> : null}
-                  <span className="dr-num">{i + 1}</span>
+              <li
+                key={r.id || i}
+                className={cn(
+                  'grid grid-cols-[clamp(64px,7vw,92px)_1fr_auto_auto] items-center gap-[clamp(10px,2vw,22px)] rounded-xl border border-transparent px-[clamp(10px,1.4vw,18px)] py-[clamp(13px,1.7vw,20px)] text-[clamp(17px,2.3vw,24px)]',
+                  i === 0 && 'border-podium-gold/30 bg-gradient-to-r from-podium-gold/[0.16] via-podium-gold/[0.03] to-transparent py-[clamp(16px,2vw,24px)] text-[clamp(20px,2.8vw,30px)] shadow-[0_0_26px_rgba(232,181,58,0.14)]',
+                  i === 1 && 'bg-gradient-to-r from-podium-silver/[0.09] to-transparent',
+                  i === 2 && 'bg-gradient-to-r from-podium-bronze/[0.09] to-transparent',
+                  isNew && 'animate-flash-new'
+                )}
+              >
+                <span className="flex items-center justify-center gap-2 font-extrabold">
+                  {podium && <Medal className={cn('size-[1.3em] drop-shadow', MEDAL[i])} aria-hidden="true" />}
+                  <span className={cn('tabular', i === 0 ? 'text-podium-gold' : i === 1 ? 'text-podium-silver' : i === 2 ? 'text-podium-bronze' : 'text-white/50')}>{i + 1}</span>
                 </span>
-                <span className="dr-name">{r.nome} {r.cognome}</span>
-                <span className="dr-score">{r.punteggio}</span>
-                <span className="dr-time">{Math.round(r.tempoTotaleSecondi)}s</span>
+                <span className="truncate font-semibold">{r.nome} {r.cognome}</span>
+                <span className={cn('tabular text-right font-extrabold', i === 0 ? 'text-podium-gold [text-shadow:0_0_18px_rgba(232,181,58,0.4)]' : 'text-white')}>{r.punteggio}</span>
+                <span className="tabular text-right text-[0.7em] text-white/50">{Math.round(r.tempoTotaleSecondi)}s</span>
                 {isAdmin && (
-                  <button className="dr-del" title="Cancella" onClick={() => doDelete(r.id, `${r.nome} ${r.cognome}`)} disabled={busy}>×</button>
+                  <button
+                    title="Cancella" onClick={() => doDelete(r.id, `${r.nome} ${r.cognome}`)} disabled={busy}
+                    className="grid size-7 place-items-center rounded-md border border-white/25 text-white/60 transition-colors hover:border-agco-red hover:bg-agco-red hover:text-white"
+                  >
+                    <Trash2 className="size-4" />
+                  </button>
                 )}
               </li>
             )

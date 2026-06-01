@@ -1,31 +1,41 @@
+import { Recycle, FileQuestion, Clock, Gift } from 'lucide-react'
+import { Button } from './ui/button.jsx'
 import { t } from '../i18n.js'
 
 export default function Welcome({ lang, onStart }) {
   const tr = t[lang]
+  const chips = [
+    { icon: FileQuestion, label: tr.chipQuestions },
+    { icon: Clock, label: tr.chipMinutes },
+    { icon: Gift, label: tr.chipPrize },
+  ]
   return (
-    <div className="screen welcome">
-      <div className="brand-mark">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-          <path d="M7 19H4.815a1.83 1.83 0 0 1-1.57-.881 1.785 1.785 0 0 1-.004-1.784L7.196 9.5" />
-          <path d="M11 19h8.203a1.83 1.83 0 0 0 1.556-.89 1.784 1.784 0 0 0 0-1.775l-1.226-2.12" />
-          <path d="m14 16-3 3 3 3" />
-          <path d="M8.293 13.596 7.196 9.5 3.1 10.598" />
-          <path d="m9.344 5.811 1.093-1.892A1.83 1.83 0 0 1 11.985 3a1.784 1.784 0 0 1 1.546.888l3.943 6.843" />
-          <path d="m13.378 9.633 4.096 1.098 1.097-4.096" />
-        </svg>
+    <div className="screen items-start justify-center gap-3.5 text-left">
+      <div className="mb-1 flex items-center gap-2.5">
+        <Recycle className="size-7 text-primary" strokeWidth={1.8} aria-hidden="true" />
         <span className="eyebrow">{tr.kickerWaste}</span>
       </div>
-      <h1>{tr.welcomeTitle}</h1>
-      <p className="sub">{tr.welcomeSub}</p>
-      <ul className="value-chips" aria-hidden="true">
-        <li>{tr.chipQuestions}</li>
-        <li>{tr.chipMinutes}</li>
-        <li>{tr.chipPrize}</li>
+      <h1 className="max-w-[12ch] font-serif text-[29px] font-bold leading-[1.12] tracking-[-0.2px]">
+        {tr.welcomeTitle}
+      </h1>
+      <p className="max-w-[32ch] text-[15px] leading-relaxed text-muted-foreground">{tr.welcomeSub}</p>
+
+      <ul className="mt-3 flex flex-wrap gap-2" aria-hidden="true">
+        {chips.map(({ icon: Icon, label }) => (
+          <li
+            key={label}
+            className="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-primary/[0.06] px-3.5 py-2 text-[12.5px] font-bold text-primary"
+          >
+            <Icon className="size-3.5" aria-hidden="true" />
+            {label}
+          </li>
+        ))}
       </ul>
-      <button className="btn btn-primary btn-lg" onClick={onStart}>
+
+      <Button size="lg" className="mt-4 w-full" onClick={onStart}>
         {tr.start}
-      </button>
-      <p className="powered">{tr.poweredBy}</p>
+      </Button>
+      <p className="mt-auto pt-7 text-[11.5px] tracking-[0.3px] text-muted-foreground/70">{tr.poweredBy}</p>
     </div>
   )
 }

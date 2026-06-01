@@ -138,10 +138,10 @@ export default function App() {
   const correct = correctCount(answers)
 
   return (
-    <div className="app">
+    <div className="mx-auto flex min-h-full w-full max-w-[520px] flex-col border-x border-border bg-card min-[680px]:h-[min(740px,calc(100vh-80px))] min-[680px]:min-h-0 min-[680px]:overflow-hidden min-[680px]:rounded-[22px] min-[680px]:border min-[680px]:shadow-[0_28px_70px_rgba(21,24,29,0.18)]">
       {showSplash && <Splash lang={lang} onDone={() => setShowSplash(false)} />}
       <Header lang={lang} setLang={setLang} />
-      <main className="app-main">
+      <main className="flex flex-1 flex-col px-5 pb-7 pt-[26px] min-[680px]:overflow-y-auto">
         {screen === SCREENS.WELCOME && (
           <Welcome lang={lang} onStart={() => setScreen(SCREENS.NAME)} />
         )}
