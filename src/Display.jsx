@@ -108,7 +108,14 @@ export default function Display({ admin = false }) {
 
   return (
     <div className="mx-auto min-h-screen max-w-[1000px] bg-brand-header px-[clamp(18px,4vw,56px)] pb-14 pt-[clamp(22px,3.5vw,44px)] text-white">
-      <header className="relative mb-2 border-b-2 border-agco-red pb-[18px]">
+      <header className="mb-2 border-b-2 border-agco-red pb-[18px]">
+        {isAdmin && (
+          <div className="mb-4 flex flex-wrap justify-end gap-2 border-b border-white/10 pb-4">
+            <Button variant="dark" size="sm" onClick={() => setView('questions')} disabled={busy}><Settings2 className="size-4" /> Gestisci domande</Button>
+            <Button variant="destructive" size="sm" onClick={doReset} disabled={busy}><RotateCcw className="size-4" /> Azzera classifica</Button>
+            <Button variant="outline" size="sm" onClick={() => signOut()}><LogOut className="size-4" /> Esci</Button>
+          </div>
+        )}
         {!isAdmin && (
           <div className="mb-3.5 flex items-center gap-4">
             <img src="/logo-agco.png" alt="AGCO" className="h-[30px] w-auto object-contain" onError={(e) => { e.target.style.display = 'none' }} />
@@ -125,13 +132,6 @@ export default function Display({ admin = false }) {
           {loadedAt && <span>agg. {loadedAt.toLocaleTimeString('it-IT')}</span>}
         </div>
 
-        {isAdmin && (
-          <div className="absolute right-0 top-0 flex flex-wrap justify-end gap-2">
-            <Button variant="dark" size="sm" onClick={() => setView('questions')} disabled={busy}><Settings2 className="size-4" /> Gestisci domande</Button>
-            <Button variant="destructive" size="sm" onClick={doReset} disabled={busy}><RotateCcw className="size-4" /> Azzera classifica</Button>
-            <Button variant="outline" size="sm" onClick={() => signOut()}><LogOut className="size-4" /> Esci</Button>
-          </div>
-        )}
       </header>
 
       {rows.length === 0 ? (
