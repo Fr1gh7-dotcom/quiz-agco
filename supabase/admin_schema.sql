@@ -8,6 +8,18 @@ drop policy if exists "auth delete" on public.leaderboard;
 create policy "auth delete" on public.leaderboard
   for delete to authenticated using (true);
 
+-- 1b) leaderboard: lettura/inserimento anche per autenticati.
+-- Le policy "anon read"/"anon insert" (schema.sql) valgono SOLO per il ruolo anon.
+-- Quando un browser è loggato in /admin, supabase-js invia il JWT utente → ruolo
+-- "authenticated": senza queste policy il SELECT torna 0 righe (RLS deny) e la
+-- classifica appare VUOTA in quel browser. Idempotenti.
+drop policy if exists "auth read" on public.leaderboard;
+create policy "auth read" on public.leaderboard
+  for select to authenticated using (true);
+drop policy if exists "auth insert" on public.leaderboard;
+create policy "auth insert" on public.leaderboard
+  for insert to authenticated with check (true);
+
 -- 2) tabella DOMANDE (editabili dal pannello admin)
 create table if not exists public.questions (
   id uuid primary key default gen_random_uuid(),

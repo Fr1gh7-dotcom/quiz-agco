@@ -67,6 +67,10 @@ export default function Display({ admin = false }) {
   }
 
   const isAdmin = admin && Boolean(session)
+  // Griglia condivisa header/righe (colonna azione extra solo da admin) → colonne allineate
+  const gridCols = isAdmin
+    ? 'grid-cols-[clamp(56px,7vw,88px)_1fr_clamp(74px,9vw,128px)_clamp(56px,7vw,92px)_36px]'
+    : 'grid-cols-[clamp(56px,7vw,88px)_1fr_clamp(74px,9vw,128px)_clamp(56px,7vw,92px)]'
 
   // Rotta /admin non loggato → schermata di accesso.
   if (admin && sessionReady && !session) {
@@ -137,7 +141,15 @@ export default function Display({ admin = false }) {
       {rows.length === 0 ? (
         <p className="py-16 text-center text-base text-white/50">In attesa dei primi partecipanti…</p>
       ) : (
-        <ol className="mt-5 flex flex-col gap-1">
+        <>
+        <div className={cn('mt-6 grid items-end gap-[clamp(10px,2vw,22px)] border-b border-white/10 px-[clamp(10px,1.4vw,18px)] pb-2.5 text-[clamp(10px,1.05vw,12px)] font-bold uppercase tracking-[1.2px] text-white/40', gridCols)}>
+          <span className="text-center">Pos.</span>
+          <span>Partecipante</span>
+          <span className="text-right">Punti</span>
+          <span className="text-right">Tempo</span>
+          {isAdmin && <span />}
+        </div>
+        <ol className="mt-2 flex flex-col gap-1">
           {rows.map((r, i) => {
             const isNew = seen.current && !seen.current.has(r.id)
             if (seen.current) seen.current.add(r.id)
@@ -146,7 +158,8 @@ export default function Display({ admin = false }) {
               <li
                 key={r.id || i}
                 className={cn(
-                  'grid grid-cols-[clamp(64px,7vw,92px)_1fr_auto_auto] items-center gap-[clamp(10px,2vw,22px)] rounded-xl border border-transparent px-[clamp(10px,1.4vw,18px)] py-[clamp(13px,1.7vw,20px)] text-[clamp(17px,2.3vw,24px)]',
+                  'grid items-center gap-[clamp(10px,2vw,22px)] rounded-xl border border-transparent px-[clamp(10px,1.4vw,18px)] py-[clamp(13px,1.7vw,20px)] text-[clamp(17px,2.3vw,24px)]',
+                  gridCols,
                   i === 0 && 'border-podium-gold/30 bg-gradient-to-r from-podium-gold/[0.16] via-podium-gold/[0.03] to-transparent py-[clamp(16px,2vw,24px)] text-[clamp(20px,2.8vw,30px)] shadow-[0_0_26px_rgba(232,181,58,0.14)]',
                   i === 1 && 'bg-gradient-to-r from-podium-silver/[0.09] to-transparent',
                   i === 2 && 'bg-gradient-to-r from-podium-bronze/[0.09] to-transparent',
@@ -158,8 +171,10 @@ export default function Display({ admin = false }) {
                   <span className={cn('tabular', i === 0 ? 'text-podium-gold' : i === 1 ? 'text-podium-silver' : i === 2 ? 'text-podium-bronze' : 'text-white/50')}>{i + 1}</span>
                 </span>
                 <span className="truncate font-semibold">{r.nome} {r.cognome}</span>
-                <span className={cn('tabular text-right font-extrabold', i === 0 ? 'text-podium-gold [text-shadow:0_0_18px_rgba(232,181,58,0.4)]' : 'text-white')}>{r.punteggio}</span>
-                <span className="tabular text-right text-[0.7em] text-white/50">{Math.round(r.tempoTotaleSecondi)}s</span>
+                <span className={cn('tabular text-right font-extrabold', i === 0 ? 'text-podium-gold [text-shadow:0_0_18px_rgba(232,181,58,0.4)]' : 'text-white')}>
+                  {r.punteggio}<span className="ml-1 text-[0.5em] font-bold uppercase tracking-wide text-white/40">pt</span>
+                </span>
+                <span className="tabular text-right text-[0.72em] text-white/55">{Math.round(r.tempoTotaleSecondi)}<span className="ml-0.5 text-[0.78em] text-white/40">s</span></span>
                 {isAdmin && (
                   <button
                     title="Cancella" onClick={() => doDelete(r.id, `${r.nome} ${r.cognome}`)} disabled={busy}
@@ -172,6 +187,7 @@ export default function Display({ admin = false }) {
             )
           })}
         </ol>
+        </>
       )}
     </div>
   )
